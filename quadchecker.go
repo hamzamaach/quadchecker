@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"sort"
 	"strconv"
 )
 
@@ -36,7 +37,7 @@ func isValidFunc(file, x, y string) bool {
 func findSameResults(quad, x, y, resultOfGiven string) []string {
 	files := []string{"./quadA", "./quadB", "./quadC", "./quadD", "./quadE"}
 	quads := []string{"quadA", "quadB", "quadC", "quadD", "quadE"}
-	sameQuads := []string{}
+	sameQuads := []string{quad[2:]}
 	for i, elem := range files {
 		if elem == quad {
 			continue
@@ -46,23 +47,30 @@ func findSameResults(quad, x, y, resultOfGiven string) []string {
 			sameQuads = append(sameQuads, quads[i])
 		}
 	}
+	sort.Strings(sameQuads)
 	return sameQuads
 }
 
 func quadChecker(file, x, y string) {
 	outputOfGiven := execCommand(file, x, y)
 	sameQuads := findSameResults(file, x, y, outputOfGiven)
-	fmt.Printf("[%s] [%s] [%s]", file[2:], x, y)
-	for _, elem := range sameQuads {
-		fmt.Printf(" || [%s] [%s] [%s]", elem, x, y)
+	for i, elem := range sameQuads {
+		fmt.Printf("[%s] [%s] [%s]", elem, x, y)
+		if i != len(sameQuads)-1 {
+			fmt.Printf(" || ")
+		}
 	}
 	fmt.Printf("\n")
 }
 
 func main() {
 	args := os.Args
-	if isValidFunc(args[1], args[2], args[3]) {
-		quadChecker(args[1], args[2], args[3])
+	if len(args[1:]) == 3 {
+		if isValidFunc(args[1], args[2], args[3]) {
+			quadChecker(args[1], args[2], args[3])
+		} else {
+			fmt.Printf("Not a quad function\n")
+		}
 	} else {
 		fmt.Printf("Not a quad function\n")
 	}
