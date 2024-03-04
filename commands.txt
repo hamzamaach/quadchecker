@@ -3,4 +3,4 @@ go build quadB.go
 go build quadC.go
 go build quadD.go
 go build quadE.go
-go run quadchecker.go ./quadA 1 2
+go build quadchecker.go
